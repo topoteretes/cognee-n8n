@@ -146,7 +146,7 @@ The node depends on `n8n-workflow` at runtime (peer dependency). It should work 
 ## Resources
 
 - Cognee API docs: `https://cognee--cognee-saas-backend-serve.modal.run/docs`
-- Package homepage: `THIS HAS TO BE CHANGED TO THE FINAL REPO LINK`
+- Package homepage: `https://github.com/topoteretes/cognee-n8n`
 
 ## Version history
 
