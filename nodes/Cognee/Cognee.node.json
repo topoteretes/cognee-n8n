@@ -1,0 +1,20 @@
+{
+    "node": "n8n-nodes-base.Cognee",
+    "nodeVersion": "1.0",
+    "codexVersion": "1.0",
+    "categories": [
+        "Miscellaneous"
+    ],
+    "resources": {
+        "credentialDocumentation": [
+            {
+                "url": "https://docs.cognee.ai/how-to-guides/cognee-cloud"
+            }
+        ],
+        "primaryDocumentation": [
+            {
+                "url": "https://docs.cognee.ai/how-to-guides/cognee-cloud"
+            }
+        ]
+    }
+}
