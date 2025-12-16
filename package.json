@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-cognee",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "n8n node to call Cognee's AI Memory Cogwit API and its services",
   "keywords": [
     "n8n-community-node-package"
