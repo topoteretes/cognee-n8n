@@ -1,7 +1,6 @@
-import {
+import type {
   INodeType,
   INodeTypeDescription,
-  NodeConnectionType,
 } from 'n8n-workflow';
 
 export class Cognee implements INodeType {
@@ -15,8 +14,8 @@ export class Cognee implements INodeType {
     defaults: {
       name: 'Add Data (Cognee)',
     },
-    inputs: [NodeConnectionType.Main],
-    outputs: [NodeConnectionType.Main],
+    inputs: ['main'],
+    outputs: ['main'],
     credentials: [
       {
         name: 'cogneeApi',
@@ -57,7 +56,7 @@ export class Cognee implements INodeType {
           {
             name: 'Add',
             value: 'add',
-            action: 'Add text to a cognee dataset',
+            action: 'Add data to cognee datasets',
             description: 'Add text_data to a Cognee dataset to "cognify" later in the Cognee memory engine',
             routing: {
               request: {
@@ -86,7 +85,7 @@ export class Cognee implements INodeType {
           {
             name: 'Cognify',
             value: 'cognify',
-            action: 'Cognify an existing dataset to save in memory',
+            action: 'Cognify an existing dataset into memory',
             description: 'After adding text data to a Cognee dataset, trigger cognify to build a knowledge graph based memory from it',
             routing: {
               request: {
@@ -197,26 +196,6 @@ export class Cognee implements INodeType {
           request: {
             body: {
               datasets: '={{$value}}',
-            },
-          },
-        },
-      },
-      {
-        displayName: 'Run in Background',
-        name: 'runInBackground',
-        type: 'boolean',
-        default: false,
-        description: 'Whether to run in background without waiting for completion (fire-and-forget)',
-        displayOptions: {
-          show: {
-            resource: ['cognify'],
-            operation: ['cognify'],
-          },
-        },
-        routing: {
-          request: {
-            body: {
-              run_in_background: '={{$value}}',
             },
           },
         },

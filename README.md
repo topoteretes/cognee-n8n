@@ -78,14 +78,12 @@ Example body sent by the node:
 - Endpoint: `POST /api/cognify`
 - Fields:
   - Datasets (`datasets`, required, multiple): One or more dataset names to cognify
-  - Run in Background (`runInBackground`, optional boolean): If true, returns immediately
 
 Example body sent by the node:
 
 ```json
 {
   "datasets": ["support_docs"],
-  "run_in_background": false
 }
 ```
 
@@ -121,15 +119,12 @@ End-to-end example workflow:
 2. Cognify (Cognee)
    - Resource: Cognify → Operation: Cognify
    - Datasets: `support_docs`
-   - Run in Background: `false` (set `true` for fire-and-forget)
 3. Search (Cognee)
    - Resource: Search → Operation: Search
    - Search Type: `GRAPH_COMPLETION`
    - Datasets: `support_docs`
    - Query: Your question, e.g. "How do I export my data?"
    - Top K: `5`
-
-Tip: If you run Cognify in the background, add a delay or polling step before Search, depending on your dataset size.
 
 Troubleshooting:
 
