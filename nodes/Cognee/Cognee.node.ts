@@ -10,9 +10,9 @@ export class Cognee implements INodeType {
     icon: 'file:cognee.svg',
     group: ['transform'],
     version: 1,
-    description: 'Add text data to a Cognee dataset, or trigger cognify to build a knowledge graph from added data, or run a search query on data in Cognee memory',
+    description: 'Add text data to a Cognee dataset, trigger cognify to build a knowledge graph, search Cognee memory, or delete datasets and data',
     defaults: {
-      name: 'Add Data (Cognee)',
+      name: 'Cognee',
     },
     inputs: ['main'],
     outputs: ['main'],
@@ -38,6 +38,7 @@ export class Cognee implements INodeType {
         options: [
           { name: 'Add Data', value: 'addData' },
           { name: 'Cognify', value: 'cognify' },
+          { name: 'Delete', value: 'delete' },
           { name: 'Search', value: 'search' },
         ],
         default: 'addData',
@@ -61,7 +62,7 @@ export class Cognee implements INodeType {
             routing: {
               request: {
                 method: 'POST',
-                url: '/api/add',
+                url: '/add_text',
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -90,10 +91,11 @@ export class Cognee implements INodeType {
             routing: {
               request: {
                 method: 'POST',
-                url: '/api/cognify',
+                url: '/cognify',
                 headers: {
                   'Content-Type': 'application/json',
                 },
+                timeout: 1200000, // 20 minutes
               },
             },
           },
@@ -119,7 +121,7 @@ export class Cognee implements INodeType {
             routing: {
               request: {
                 method: 'POST',
-                url: '/api/search',
+                url: '/search',
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -128,6 +130,64 @@ export class Cognee implements INodeType {
           },
         ],
         default: 'search',
+      },
+      {
+        displayName: 'Operation',
+        name: 'operation',
+        type: 'options',
+        noDataExpression: true,
+        displayOptions: {
+          show: {
+            resource: ['delete'],
+          },
+        },
+        options: [
+          {
+            name: 'Delete Dataset',
+            value: 'deleteDataset',
+            action: 'Delete a dataset by its ID',
+            description: 'Permanently delete a dataset and all its associated data',
+            routing: {
+              request: {
+                method: 'DELETE',
+                url: '=/datasets/{{$parameter["datasetId"]}}',
+              },
+              output: {
+                postReceive: [
+                  {
+                    type: 'set',
+                    properties: {
+                      value: '={{ { "deleted": true } }}',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            name: 'Delete Data',
+            value: 'deleteData',
+            action: 'Delete a specific data item from a dataset',
+            description: 'Remove a specific data item from a dataset while keeping the dataset intact',
+            routing: {
+              request: {
+                method: 'DELETE',
+                url: '=/datasets/{{$parameter["datasetId"]}}/data/{{$parameter["dataId"]}}',
+              },
+              output: {
+                postReceive: [
+                  {
+                    type: 'set',
+                    properties: {
+                      value: '={{ { "deleted": true } }}',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        default: 'deleteDataset',
       },
       // Add action fields
       {
@@ -170,7 +230,7 @@ export class Cognee implements INodeType {
         routing: {
           request: {
             body: {
-              text_data: '={{$value}}',
+              textData: '={{$value}}',
             },
           },
         },
@@ -288,6 +348,34 @@ export class Cognee implements INodeType {
             body: {
               topK: '={{$value}}',
             },
+          },
+        },
+      },
+      // Delete action fields
+      {
+        displayName: 'Dataset ID',
+        name: 'datasetId',
+        type: 'string',
+        default: '',
+        required: true,
+        description: 'The unique identifier (UUID) of the dataset',
+        displayOptions: {
+          show: {
+            resource: ['delete'],
+          },
+        },
+      },
+      {
+        displayName: 'Data ID',
+        name: 'dataId',
+        type: 'string',
+        default: '',
+        required: true,
+        description: 'The unique identifier (UUID) of the data item to delete',
+        displayOptions: {
+          show: {
+            resource: ['delete'],
+            operation: ['deleteData'],
           },
         },
       },
