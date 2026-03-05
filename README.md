@@ -1,12 +1,13 @@
 # n8n-nodes-cognee
 
-Use AI memory and context engineering, built by cognee directly in your n8n workflows.
+Use Cognee Cloud's AI memory and context engineering directly in your n8n workflows.
 
 This community node lets you:
 
-- Add text data to a your cognee
-- Turn data into AI memory with cognify to apply best context engineering practices
+- Add text data to a Cognee dataset
+- Turn data into AI memory with cognify to build knowledge-graph-based memory
 - Run search over your AI memory datasets
+- Delete datasets or individual data items
 
 [n8n](https://n8n.io/) is a fair-code licensed workflow automation platform.
 
@@ -39,24 +40,22 @@ Restart n8n after installation if required.
 
 ## Credentials
 
-Get your Cognee API key from `https://platform.cognee.ai/`
+Get your Cognee API key and Base URL from your [Cognee Cloud dashboard](https://docs.cognee.ai/how-to-guides/cognee-cloud) (API Keys page).
 
 Create credentials of type `Cognee API` in n8n. The node uses these values to authenticate every request:
 
-- Base URL: The base URL of your Cognee API instance. Default in the credential form is `https://cognee--cognee-saas-backend-serve.modal.run`.
-- API Key: Your Cognee API key, sent via `X-Api-Key` header.
-
-Reference: Cognee API docs at `https://cognee--cognee-saas-backend-serve.modal.run/docs`.
+- **Base URL**: The base URL of your Cognee Cloud instance, e.g. `https://tenant-xxx.cloud.cognee.ai/api`.
+- **API Key**: Your Cognee API key, sent via the `X-Api-Key` header.
 
 ## Operations
 
-The node exposes three resources. Each operation maps to a Cognee API endpoint and request body.
+The node exposes four resources. Each operation maps to a Cognee API endpoint.
 
 ### Resource: Add Data
 
-- Operation: Add
-- Endpoint: `POST /api/add`
-- Fields:
+- **Operation**: Add
+- **Endpoint**: `POST /add_text`
+- **Fields**:
   - Dataset Name (`datasetName`, required): Name of the Cognee dataset to add text to
   - Text Data (`textData`, required, multiple): Array of strings to store
 
@@ -65,7 +64,7 @@ Example body sent by the node:
 ```json
 {
   "datasetName": "support_docs",
-  "text_data": [
+  "textData": [
     "FAQ: Reset password via account settings.",
     "Guide: Export data as CSV from dashboard."
   ]
@@ -74,24 +73,24 @@ Example body sent by the node:
 
 ### Resource: Cognify
 
-- Operation: Cognify
-- Endpoint: `POST /api/cognify`
-- Fields:
+- **Operation**: Cognify
+- **Endpoint**: `POST /cognify`
+- **Fields**:
   - Datasets (`datasets`, required, multiple): One or more dataset names to cognify
 
 Example body sent by the node:
 
 ```json
 {
-  "datasets": ["support_docs"],
+  "datasets": ["support_docs"]
 }
 ```
 
 ### Resource: Search
 
-- Operation: Search
-- Endpoint: `POST /api/search`
-- Fields:
+- **Operation**: Search
+- **Endpoint**: `POST /search`
+- **Fields**:
   - Search Type (`searchType`): One of `GRAPH_COMPLETION`, `GRAPH_COMPLETION_COT`, `RAG_COMPLETION`
   - Datasets (`datasets`, required, multiple)
   - Query (`query`, required)
@@ -108,23 +107,39 @@ Example body sent by the node:
 }
 ```
 
+### Resource: Delete
+
+- **Operation**: Delete Dataset
+- **Endpoint**: `DELETE /datasets/{datasetId}`
+- **Fields**:
+  - Dataset ID (`datasetId`, required): The UUID of the dataset to delete
+
+- **Operation**: Delete Data
+- **Endpoint**: `DELETE /datasets/{datasetId}/data/{dataId}`
+- **Fields**:
+  - Dataset ID (`datasetId`, required): The UUID of the dataset
+  - Data ID (`dataId`, required): The UUID of the data item to remove
+
 ## Usage examples
 
 End-to-end example workflow:
 
-1. Add Data (Cognee)
+1. **Add Data** (Cognee)
    - Resource: Add Data → Operation: Add
    - Dataset Name: `support_docs`
    - Text Data: Add one or more strings with your content
-2. Cognify (Cognee)
+2. **Cognify** (Cognee)
    - Resource: Cognify → Operation: Cognify
    - Datasets: `support_docs`
-3. Search (Cognee)
+3. **Search** (Cognee)
    - Resource: Search → Operation: Search
    - Search Type: `GRAPH_COMPLETION`
    - Datasets: `support_docs`
    - Query: Your question, e.g. "How do I export my data?"
    - Top K: `5`
+4. **Delete** (Cognee)
+   - Resource: Delete → Operation: Delete Dataset
+   - Dataset ID: UUID of the dataset to remove
 
 Troubleshooting:
 
@@ -140,12 +155,13 @@ The node depends on `n8n-workflow` at runtime (peer dependency). It should work 
 
 ## Resources
 
-- Cognee API docs: `https://cognee--cognee-saas-backend-serve.modal.run/docs`
-- Package homepage: `https://github.com/topoteretes/cognee-n8n`
+- [Cognee Cloud docs](https://docs.cognee.ai/how-to-guides/cognee-cloud)
+- [Package homepage](https://github.com/topoteretes/cognee-n8n)
 
 ## Version history
 
-- 0.1.0: Initial release with Add Data, Cognify, and Search operations.
+- **0.2.0**: Add Delete resource (Delete Dataset, Delete Data operations). Update API endpoints and base URL to Cognee Cloud.
+- **0.1.0**: Initial release with Add Data, Cognify, and Search operations.
 
 ## License
 
