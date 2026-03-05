@@ -7,17 +7,17 @@ import {
 export class CogneeApi implements ICredentialType {
   name = 'cogneeApi';
   displayName = 'Cognee API';
-  documentationUrl = 'https://api.cognee.ai/docs/';
+  documentationUrl = 'https://docs.cognee.ai/how-to-guides/cognee-cloud';
 
   properties: INodeProperties[] = [
     {
       displayName: 'Base URL',
       name: 'baseUrl',
       type: 'string',
-      default: 'https://cognee--cognee-saas-backend-serve.modal.run',
-      placeholder: 'https://api.cognee.ai',
+      default: '',
+      placeholder: 'https://tenant-xxx.cloud.cognee.ai/api',
       description:
-        'The root URL of Cognee API instance.',
+        'Copy the Base URL from your Cognee dashboard (API Keys page).',
     },
     {
       displayName: 'API Key',

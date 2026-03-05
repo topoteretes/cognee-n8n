@@ -61,7 +61,7 @@ export class Cognee implements INodeType {
             routing: {
               request: {
                 method: 'POST',
-                url: '/api/add',
+                url: '/add_text',
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -90,7 +90,7 @@ export class Cognee implements INodeType {
             routing: {
               request: {
                 method: 'POST',
-                url: '/api/cognify',
+                url: '/cognify',
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -119,7 +119,7 @@ export class Cognee implements INodeType {
             routing: {
               request: {
                 method: 'POST',
-                url: '/api/search',
+                url: '/search',
                 headers: {
                   'Content-Type': 'application/json',
                 },
@@ -170,7 +170,7 @@ export class Cognee implements INodeType {
         routing: {
           request: {
             body: {
-              text_data: '={{$value}}',
+              textData: '={{$value}}',
             },
           },
         },
